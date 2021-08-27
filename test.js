@@ -1,4 +1,9 @@
 
+const dotenv = require('dotenv')
+dotenv.config()
+const twilioSid = process.env.TWILIO_ACCOUNT_SID
+const twilioAuthToken = process.env.TWILIO_AUTH_TOKEN
+const twilio = require('twilio')(twilioSid, twilioAuthToken)
 const axios = require('axios')
 
 
@@ -47,6 +52,14 @@ class GasAlert {
     setInterval(this._checkPrices.bind(this, alertPrice, txSpeed), interval)
   }
 
+  async sendText(gasPrice, txSpeed) {
+    twilio.messages.create({
+      body: 'Testing',
+      from: process.env.TWILIO_FROM,
+      to: process.env.PHONE_TO_ALERT
+    })
+  }
+
 }
 
 
@@ -55,4 +68,6 @@ class GasAlert {
 
 const ga = new GasAlert()
 ga.alertWhenPriceIsBelow(20, 'fast')
+
+//ga.sendText('150', 'fast')
 
